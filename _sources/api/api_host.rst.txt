@@ -15,12 +15,11 @@ CLASS 驱动信息结构体
 .. code-block:: C
 
     struct usbh_class_info {
-        uint8_t match_flags; /* Used for product specific matches; range is inclusive */
-        uint8_t class;       /* Base device class code */
-        uint8_t subclass;    /* Sub-class, depends on base class. Eg. */
-        uint8_t protocol;    /* Protocol, depends on base class. Eg. */
-        uint16_t vid;        /* Vendor ID (for vendor/product specific devices) */
-        uint16_t pid;        /* Product ID (for vendor/product specific devices) */
+        uint8_t match_flags;           /* Used for product specific matches; range is inclusive */
+        uint8_t bInterfaceClass;       /* Base device class code */
+        uint8_t bInterfaceSubClass;    /* Sub-class, depends on base class. Eg. */
+        uint8_t bInterfaceProtocol;    /* Protocol, depends on base class. Eg. */
+        const uint16_t (*id_table)[2]; /* List of Vendor/Product ID pairs */
         const struct usbh_class_driver *class_driver;
     };
 
@@ -127,10 +126,11 @@ usbh_initialize
 
 .. code-block:: C
 
-    int usbh_initialize(uint8_t busid, uint32_t reg_base);
+    int usbh_initialize(uint8_t busid, uint32_t reg_base, usbh_event_handler_t event_handler);
 
 - **busid**  bus id，从 0开始，不能超过 `CONFIG_USBHOST_MAX_BUS`
 - **reg_base**  hcd 寄存器基地址
+- **event_handler**  host 事件回调函数，可以为NULL
 - **return**  0 表示正常其他表示错误
 
 usbh_find_class_instance
